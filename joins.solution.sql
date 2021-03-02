@@ -32,6 +32,11 @@ JOIN "warehouse" ON "warehouse".id = "warehouse_product".warehouse_id
 WHERE "products".description = 'diet pepsi';
 
 5. Get the number of orders for each customer. NOTE: It is OK if those without orders are not included in results.
+SELECT "customers".id, SUM("orders".id) -- DOES NOT WORK
+FROM "customers" 
+JOIN "addresses" ON "customers".id = "addresses".customer_id 
+JOIN "orders" ON "addresses".customer_id = "orders".address_id 
+GROUP BY "customers".id, "orders".id;
 
 6. How many customers do we have?
 SELECT COUNT(id) 
@@ -51,5 +56,19 @@ WHERE "description" = 'diet pepsi';
 
 ## Stretch
 9. How much was the total cost for each order?
+SELECT "order_id"
+FROM "orders"  
+JOIN "line_items" ON "orders".address_id = "line_items".order_id
+JOIN "products" ON "line_items".product_id = "products".id 
+GROUP BY "order_id" -- NOTHING WORKS...
+
 10. How much has each customer spent in total?
-11. How much has each customer spent in total? Customers who have spent $0 should still show up in the table. It should say 0, not NULL (research coalesce).
+SELECT *  
+FROM "customers" 
+JOIN "addresses" ON "customers".id = "addresses".customer_id 
+JOIN "orders" ON "addresses".customer_id = "orders".address_id 
+JOIN "line_items" ON "orders".address_id = "line_items".order_id
+JOIN "products" ON "line_items".product_id = "products".id
+GROUP BY "customers".id;
+
+11. How much has each customer spent in total? Customers who have spent $0 should still show up in the 
